@@ -3,6 +3,7 @@ const Order = require('../model/Order');
 const Employee = require('../model/Employee');
 const mongoose = require('mongoose');
 const { request } = require('express');
+const axios = require('axios');
 
 const mainWatson = async (req, res) => {
   const request = await req.body.action;
@@ -11,8 +12,10 @@ const mainWatson = async (req, res) => {
   switch (request) {
     case 'startorder':
       await startOrder(req, res);
+      break;
     case 'getallemployees':
       await getAllEmployees(req, res);
+      break;
     case 'findmenuitem':
       await findMenuItem(req, res);
       break;
@@ -25,21 +28,25 @@ const mainWatson = async (req, res) => {
 };
 
 const startOrder = async (req, res) => {
-  // if (!req?.body?.firstname || !req?.body?.lastname) {
-  //     return res.status(400).json({ 'message': 'First and last names are required' });
-  // }
 
-  // try {
-  //     const result = await Employee.create({
-  //         firstname: req.body.firstname,
-  //         lastname: req.body.lastname
-  //     });
+  console.log('Starting order...');
+  let status, data;
 
-  //     res.status(201).json(result);
-  // } catch (err) {
-  //     console.error(err);
-  // }
-  await request.url('http://localhost:8080/engine-rest/process-definition/key/start-instance/start');
+  axios.post('http://localhost:8080/engine-rest/process-definition/key/start-instance/start', {});
+  // .then(res => {
+  //   console.log(`Status: ${res.status}`)
+  //   status = res.status;
+  //   console.log('Body: ', res.data)
+  //   data = res.data;
+  // })
+  // .catch(err => {
+  //   console.error(err)
+  // })
+  
+  // console.log('Starting order...');
+
+  // res.status(status).json(data);
+  res.json();
 }
 
 const getAllEmployees = async (req, res) => {
