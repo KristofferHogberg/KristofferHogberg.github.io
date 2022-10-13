@@ -6,8 +6,8 @@ const employeesController = require('../../controllers/employeesController');
 
 
 router.route('/')
-.get(employeesController.getAllEmployees);
-// .post(employeesController.createNewEmployee)
+.get(employeesController.getAllEmployees)
+.post(employeesController.createNewEmployee);
 // router.route('/')
 //     .get(employeesController.getAllEmployees)
 //     .post(verifyRoles(ROLES_LIST.Admin, ROLES_LIST.Editor), employeesController.createNewEmployee)

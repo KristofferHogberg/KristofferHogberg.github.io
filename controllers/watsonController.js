@@ -1,15 +1,18 @@
 const MenuItem = require('../model/MenuItem');
 const Order = require('../model/Order');
+const Employee = require('../model/Employee');
 const mongoose = require('mongoose');
+const { request } = require('express');
 
 const mainWatson = async (req, res) => {
   const request = await req.body.action;
-  
+
   console.log(`This is the request from body: ${request}`);
   switch (request) {
-    case 'testgetcall':
-      await testGetCall(req, res);
-      break;
+    case 'startorder':
+      await startOrder(req, res);
+    case 'getallemployees':
+      await getAllEmployees(req, res);
     case 'findmenuitem':
       await findMenuItem(req, res);
       break;
@@ -19,6 +22,31 @@ const mainWatson = async (req, res) => {
     default:
       return res.status(400);
   }
+};
+
+const startOrder = async (req, res) => {
+  // if (!req?.body?.firstname || !req?.body?.lastname) {
+  //     return res.status(400).json({ 'message': 'First and last names are required' });
+  // }
+
+  // try {
+  //     const result = await Employee.create({
+  //         firstname: req.body.firstname,
+  //         lastname: req.body.lastname
+  //     });
+
+  //     res.status(201).json(result);
+  // } catch (err) {
+  //     console.error(err);
+  // }
+  await request.url('http://localhost:8080/engine-rest/process-definition/key/start-instance/start');
+}
+
+const getAllEmployees = async (req, res) => {
+  const employees = await Employee.find();
+  if (!employees)
+    return res.status(204).json({ message: 'No employees found.' });
+  res.json(employees);
 };
 
 const postsendAllMenuItems = async (req, res) => {
@@ -58,25 +86,12 @@ const saveOrder = async (req, res) => {
       .status(201)
       .json({ message: `Din Order har blivit accepterad!`, success: true });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: `Din order har tyvärr inte gått igenom, fösök gärna senar eller kontakta restaurangen`,
-        success: false,
-      });
+    res.status(400).json({
+      message: `Din order har tyvärr inte gått igenom, fösök gärna senar eller kontakta restaurangen`,
+      success: false,
+    });
     console.error(error);
   }
-};
-
-const testGetCall = async (req, res) => {
-  testShit = {
-    name: 'Kalle',
-    dog: 'Lelle'
-  };
-
-  console.log(testShit.json());
-
-  res.json(testShit);
 };
 
 const findMenuItem = async (req, res) => {
